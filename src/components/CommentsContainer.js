@@ -1,52 +1,92 @@
 import React, { useEffect } from "react";
 // import styled from "styled-components";
-import { useSelector, connect } from "react-redux";
+import { useSelector, useDispatch, connect } from "react-redux";
 import { FaShare, FaHeart } from "react-icons/fa";
 import { IoTrashOutline } from "react-icons/io5";
 import { ImPencil2 } from "react-icons/im";
 import { useState } from "react";
+import { deleteComment } from "../redux/actions/deleteComment";
+import { likeComment } from "../redux/actions/likeComment";
+import MiniReplyPopup from "./MiniReplyPopup";
 
 function CommentsContainer(props) {
-  const allComments = useSelector((state) => state.comments.comments);
-  useEffect(() => {
-    console.log(allComments);
-  }, [allComments]);
+	const [isReplyButtonClicked, setIsReplyButtonClicked] = useState({
+		id: "",
+		isReply: false,
+	});
+	const allComments = useSelector((state) => state.comments.comments);
+	const dispatch = useDispatch();
+	useEffect(() => {
+		console.log(allComments);
+	}, [allComments]);
 
-  return (
-    <div className="comments-container">
-      {allComments.map((comment) => {
-        const { id, text, like, reply } = comment;
-        return (
-          <div className="mapped-comment" key={id}>
-            <div className="comment">
-              <div className="comment-text">{text}</div>
-              <div className="action-icons">
-                <FaHeart className={like ? "like" : "unlike"} />
-                <FaShare />
-                <ImPencil2 className="edit-icon" />
-                <IoTrashOutline className="trash-icon" />
-              </div>
-            </div>
+	const handleDeleteComment = (comment) => {
+		dispatch(deleteComment(comment));
+	};
 
-            <div className="reply-comments">
-              {reply.map((thisReply) => {
-                return (
-                  <div className="reply-comment" key={thisReply.id}>
-                    <div className="comment-text">{thisReply.text}</div>
-                    <div className="action-icons">
-                      <FaHeart className={thisReply.like ? "like" : "unlike"} />
-                      <ImPencil2 className="edit-icon" />
-                      <IoTrashOutline className="trash-icon" />
-                    </div>
-                  </div>
-                );
-              })}
-            </div>
-          </div>
-        );
-      })}
-    </div>
-  );
+	const handleLikeComment = (comment) => {
+		dispatch(likeComment(comment));
+	};
+
+	const handleReplyPopup = (id) => {
+		setIsReplyButtonClicked({ id: id, isReply: !isReplyButtonClicked.isReply });
+	};
+	const originalReplyState = () => {
+		setIsReplyButtonClicked({
+			id: "",
+			isReply: false,
+		});
+	};
+
+	return (
+		<div className="comments-container">
+			{allComments.map((comment) => {
+				const { id, text, like, reply } = comment;
+				return (
+					<div className="mapped-comment" key={id}>
+						<div className="comment">
+							<div className="comment-text">{text}</div>
+							<div className="action-icons">
+								<FaHeart
+									className={like ? "like" : "unlike"}
+									onClick={() => handleLikeComment(comment)}
+								/>
+								<FaShare onClick={() => handleReplyPopup(id)} />
+								{isReplyButtonClicked.isReply &&
+								isReplyButtonClicked.id === id ? (
+									<MiniReplyPopup
+										originalReplyState={originalReplyState}
+										belongingComment={comment}
+									/>
+								) : null}
+
+								<ImPencil2 className="edit-icon" />
+								<IoTrashOutline
+									className="trash-icon"
+									onClick={() => handleDeleteComment(comment)}
+								/>
+							</div>
+						</div>
+
+						<div className="reply-comments">
+							{reply.map((thisReply) => {
+								return (
+									<div className="reply-comment" key={thisReply.id}>
+										<div className="comment-text">{thisReply.text}</div>
+										<div className="action-icons">
+											<FaHeart className={thisReply.like ? "like" : "unlike"} />
+											<ImPencil2 className="edit-icon" />
+											<IoTrashOutline className="trash-icon" />
+										</div>
+									</div>
+								);
+							})}
+						</div>
+					</div>
+				);
+			})}
+		</div>
+	);
 }
 
 export default CommentsContainer;
