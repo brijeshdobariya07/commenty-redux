@@ -1,6 +1,6 @@
 import React, { useEffect } from "react";
 // import styled from "styled-components";
-import { useSelector, useDispatch, connect } from "react-redux";
+import { useSelector, useDispatch } from "react-redux";
 import { FaShare, FaHeart } from "react-icons/fa";
 import { IoTrashOutline } from "react-icons/io5";
 import { ImPencil2 } from "react-icons/im";
@@ -8,6 +8,8 @@ import { useState } from "react";
 import { deleteComment } from "../redux/actions/deleteComment";
 import { likeComment } from "../redux/actions/likeComment";
 import MiniReplyPopup from "./MiniReplyPopup";
+import { likeReplyComment } from "../redux/actions/likeReplyComment";
+import { deleteReplyComment } from "../redux/actions/deleteReplyComment";
 
 function CommentsContainer(props) {
 	const [isReplyButtonClicked, setIsReplyButtonClicked] = useState({
@@ -17,7 +19,7 @@ function CommentsContainer(props) {
 	const allComments = useSelector((state) => state.comments.comments);
 	const dispatch = useDispatch();
 	useEffect(() => {
-		console.log(allComments);
+		// console.log(allComments);
 	}, [allComments]);
 
 	const handleDeleteComment = (comment) => {
@@ -36,6 +38,15 @@ function CommentsContainer(props) {
 			id: "",
 			isReply: false,
 		});
+	};
+
+	// For Reply comments
+	const handleLikeReplyComment = (belongingComment, replyComment) => {
+		dispatch(likeReplyComment(replyComment));
+	};
+
+	const handleDeleteReply = (comment) => {
+		dispatch(deleteReplyComment(comment));
 	};
 
 	return (
@@ -74,9 +85,17 @@ function CommentsContainer(props) {
 									<div className="reply-comment" key={thisReply.id}>
 										<div className="comment-text">{thisReply.text}</div>
 										<div className="action-icons">
-											<FaHeart className={thisReply.like ? "like" : "unlike"} />
+											<FaHeart
+												className={thisReply.like ? "like" : "unlike"}
+												onClick={() =>
+													handleLikeReplyComment(comment, thisReply)
+												}
+											/>
 											<ImPencil2 className="edit-icon" />
-											<IoTrashOutline className="trash-icon" />
+											<IoTrashOutline
+												className="trash-icon"
+												onClick={() => handleDeleteReply(thisReply)}
+											/>
 										</div>
 									</div>
 								);

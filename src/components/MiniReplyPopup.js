@@ -15,6 +15,7 @@ function MiniReplyPopup(props) {
 			id: uuidv4(),
 			text: replyText,
 			like: false,
+			subid: belongingComment.id,
 		};
 		belongingComment.reply.push(sendThisReply);
 		dispatch(addReplyComment(belongingComment));

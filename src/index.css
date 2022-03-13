@@ -60,6 +60,10 @@ code {
 	right: 0;
 	border: 1px solid #1a1a1a;
 }
+.type-comment-box-container button {
+	background: none;
+	border: none;
+}
 
 .type-comment-input {
 	width: 100%;
@@ -80,7 +84,7 @@ code {
 	padding-right: 10px;
 }
 .send-icon {
-	font-size: 1.6em;
+	font-size: 2em;
 	margin: 0 10px;
 	margin-left: 20px;
 	margin-right: 10px;
@@ -152,8 +156,8 @@ code {
 .reply-comment:before {
 	content: "";
 	position: absolute;
-	border-bottom: 2px solid #1a1a1a;
-	border-left: 2px solid #1a1a1a;
+	border-bottom: 2px solid #c9c7c7;
+	border-left: 2px solid #c9c7c7;
 	bottom: 30px;
 	width: 100px;
 	left: -50px;

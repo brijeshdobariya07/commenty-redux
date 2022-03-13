@@ -20,7 +20,8 @@ function TypeCommentBox() {
 		setCommentMsg(e.target.value);
 	};
 
-	const handleSendCommentButton = () => {
+	const handleSendCommentButton = (e) => {
+		e.preventDefault();
 		if (commentMsg !== "") {
 			dispatch(addComment(sendComment));
 			setCommentMsg("");
@@ -31,19 +32,21 @@ function TypeCommentBox() {
 
 	return (
 		<div>
-			<div className="type-comment-box-container">
-				<div className="type-comment-input">
-					<input
-						type="text"
-						placeholder="Enter Comment . . ."
-						onChange={(e) => handleInput(e)}
-						value={commentMsg}
-					/>
+			<form action="">
+				<div className="type-comment-box-container">
+					<div className="type-comment-input">
+						<input
+							type="text"
+							placeholder="Enter Comment . . ."
+							onChange={(e) => handleInput(e)}
+							value={commentMsg}
+						/>
+					</div>
+					<button type="submit" onClick={(e) => handleSendCommentButton(e)}>
+						<MdSend className="send-icon" />
+					</button>
 				</div>
-				<div>
-					<MdSend className="send-icon" onClick={handleSendCommentButton} />
-				</div>
-			</div>
+			</form>
 		</div>
 	);
 }
